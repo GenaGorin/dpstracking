@@ -8,8 +8,9 @@ $params = [
             'lng'=> $_POST['lng'],
             'lat'=> $_POST['lat'],
             'comment'=> $_POST['comment'],
+            'activity' => $_POST['activity'],
         ];
-$sql = "INSERT INTO markers (lng, lat, comment) VALUES ( :lng, :lat, :comment)";
+$sql = "INSERT INTO markers (lng, lat, comment,activity) VALUES ( :lng, :lat, :comment, :activity)";
 $db->query($sql, $params);
 /*
 if ($_POST['method'] == 'render') {

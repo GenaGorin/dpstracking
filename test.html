@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+
+<title>Пример балун со стилем к заметке Продолжаем работать с маркерами используя API Яндекс.Карт</title>
+                <meta http-equiv="X-UA-Compatible" content="IE=7"/>
+		<meta http-equiv="Content-Type" content="text/html" />
+		<script src="http://api-maps.yandex.ru/1.0/?key=
+		ACuF2EkBAAAAzahYCgIASLsFm9n8EPvNjaTc8nAWiETKgYcAAAAAAAAAAAC-q61vWtIK3Kzt2yQ9qFaGJGKzXw=="
+		type="text/javascript"></script>
+
+		<script type="text/javascript" charset="utf-8">
+		 var map;
+		 function init () {
+		   map = new YMaps.Map( document.getElementById("YMapsID") );
+		   map.setCenter(new YMaps.GeoPoint(44.017152,56.315455), 15, 
+				  YMaps.MapType.MAP);
+
+
+            var t = new YMaps.Template();
+            t.text = "<div style=\"color:#ff0000; font-weight: bold;\">$[description]</div>";
+           YMaps.Templates.add("my#template", t);
+
+            var s = new YMaps.Style();
+            s.iconStyle = new YMaps.IconStyle();
+            s.iconStyle.offset = new YMaps.Point(-15, -15);
+            s.iconStyle.href = "files/theater.png";
+            s.iconStyle.size = new YMaps.Point(30, 30);
+
+            
+            map.addControl(new YMaps.TypeControl());
+            map.addControl(new YMaps.ToolBar());
+            map.addControl(new YMaps.Zoom());
+            map.addControl(new YMaps.MiniMap());
+            map.addControl(new YMaps.ScaleLine());
+
+           s.balloonContentStyle = new YMaps.BalloonContentStyle("my#template");  
+
+            var point = new YMaps.GeoPoint(44.017152,56.315455);
+            var placemark = new YMaps.Placemark(point, {style: s});
+            placemark.description = 'Оперный театр им. А. С. Пушкина';
+            map.addOverlay(placemark);
+            placemark.openBalloon();
+
+		 }
+		</script>
+	</head>
+
+	<body onload="init();">
+		<div id="YMapsID" style="height:400px; width:600px;"></div>
+
+<p><a href="http://webmap-blog.ru/?p=75" title="Продолжаем работать с маркерами используя API Яндекс.Карт" target="_blank">Вернуться к тексту заметки</a></p>
+
+	</body>
+
+	</html>

@@ -14,24 +14,34 @@
             zoom: 12
         });
 
-        myMap.events.add('click', function (e) {
+        myMap.events.add('dblclick', function (e) {
     	// Получение координат щелчка
+        e.preventDefault();
     	coords = e.get('coords');
     		console.log(coords);
         $('.modal_window_marker_coment').show();
+        $('#map').hide();
         //createNewMarker(coords); 
 		});
 
         $('.create_new_marker').click(function() {
             createNewMarker(coords); 
             $('.modal_window_marker_coment').hide();
+            $('#map').show();
+        });
+
+        $('.close_markers').click(function() {
+            $('.modal_window_marker_coment').hide();
+            $('#map').show();
         });
 
         function createNewMarker(coords) {
             let comment = $('.value_for_comment').val();
+            let activity = $('.value_for_activity').val();
             let data = new FormData();
             data.append( 'lng', coords[0] );
             data.append( 'lat', coords[1] );
+            data.append( 'activity', activity );
             data.append( 'comment', comment );
             $.ajax({
             url         : '/handler.php',
@@ -108,19 +118,45 @@
 
         function generateMarkers(respond) {
             for (var i = 0; i < respond.length; i++) {
-                var myGeoObject = new ymaps.GeoObject({
-                geometry: {
-                        type: "Point", // тип геометрии - точка
-                        coordinates: [respond[i]['lng'], respond[i]['lat']] // координаты точки
-                    },
-                properties: {
-                  clusterCaption: respond[i].comment,
-                  balloonContentBody: respond[i].comment
-                }
+                //var myGeoObject = new ymaps.GeoObject({
+                //geometry: {
+                //        type: "Point", // тип геометрии - точка
+                //        coordinates: [respond[i]['lng'], respond[i]['lat']], // координаты точки
+                //        iconLayout: 'default#image',
+                //        iconImageHref: './assets/img/ucrainec.png',
+                //        iconImageSize: [30, 30],
+                //        iconImageOffset: [-3, -42],
+                //    },
+                //properties: {
+                //  clusterCaption: respond[i].comment,
+                //  balloonContentBody: respond[i].comment
+                //}
+                //});
+                var myPlacemark = new ymaps.Placemark([respond[i]['lng'], respond[i]['lat']], {
+                    balloonContent: respond[i].comment,
+                    iconContent: respond[i].comment,
+                }, {
+                    iconLayout: 'default#image',
+                    iconImageHref: respond[i]['activity'],
+                    iconImageSize: [30, 30],
+                    iconImageOffset: [-3, -42]
                 });
-                myMap.geoObjects.add(myGeoObject);
+                //myMap.geoObjects.add(myGeoObject);
+                myMap.geoObjects.add(myPlacemark);
             }
+
+        var myPlacemark = new ymaps.Placemark([51.531908, 46.007080], {
+                balloonContent: 'Musara sosat',
+                iconContent: 'musara pidarasi',
+            }, {
+                iconLayout: 'default#image',
+                iconImageHref: './assets/img/csgo.png',
+                iconImageSize: [30, 30],
+                iconImageOffset: [-3, -42],
+            });
+            myMap.geoObjects.add(myPlacemark);
         }
+
 
 
     }
