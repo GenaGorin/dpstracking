@@ -11,7 +11,7 @@
             center: [51.506863, 45.956584],
             // Уровень масштабирования. Допустимые значения:
             // от 0 (весь мир) до 19.
-            zoom: 12
+            zoom: 14
         });
 
         myMap.events.add('dblclick', function (e) {
@@ -20,14 +20,14 @@
     	coords = e.get('coords');
     		console.log(coords);
         $('.modal_window_marker_coment').show();
-        $('#map').hide();
+        //$('#map').hide();
         //createNewMarker(coords); 
 		});
 
         $('.create_new_marker').click(function() {
             createNewMarker(coords); 
             $('.modal_window_marker_coment').hide();
-            $('#map').show();
+            //$('#map').show();
         });
 
         $('.close_markers').click(function() {
@@ -35,13 +35,32 @@
             $('#map').show();
         });
 
+        let iconsCLear = ['./assets/img/clear/clear.png', './assets/img/clear/clear2.png', './assets/img/clear/clear3.png', './assets/img/clear/clear4.png'];
+        let iconsActive = ['./assets/img/active/active.png', './assets/img/active/active2.png' , './assets/img/active/active3.png', './assets/img/active/active4.png', 
+        './assets/img/active/active6.png', './assets/img/active/active7.png', './assets/img/active/active8.png']
+
+        function getRandomInt(min, max) {
+          return Math.floor(Math.random() * (max - min)) + min;
+        }
+
         function createNewMarker(coords) {
             let comment = $('.value_for_comment').val();
             let activity = $('.value_for_activity').val();
+            let index;
+            let icon;
+            if (activity == 'clear') {
+                index = getRandomInt(0,3);
+                icon = iconsCLear[index];
+                console.log(iconsCLear[index]);
+            }else if(activity == 'active') {
+                index = getRandomInt(0,6);
+                console.log(iconsActive[index]);
+                icon = iconsActive[index];
+            }
             let data = new FormData();
             data.append( 'lng', coords[0] );
             data.append( 'lat', coords[1] );
-            data.append( 'activity', activity );
+            data.append( 'activity', icon );
             data.append( 'comment', comment );
             $.ajax({
             url         : '/handler.php',
@@ -133,13 +152,13 @@
                 //}
                 //});
                 var myPlacemark = new ymaps.Placemark([respond[i]['lng'], respond[i]['lat']], {
-                    balloonContent: respond[i].comment,
+                    balloonContent: respond[i].comment +' '+respond[i].date,
                     iconContent: respond[i].comment,
                 }, {
                     iconLayout: 'default#image',
                     iconImageHref: respond[i]['activity'],
-                    iconImageSize: [30, 30],
-                    iconImageOffset: [-3, -42]
+                    iconImageSize: [45, 45],
+                    iconImageOffset: [-25, -50]
                 });
                 //myMap.geoObjects.add(myGeoObject);
                 myMap.geoObjects.add(myPlacemark);
@@ -152,7 +171,7 @@
                 iconLayout: 'default#image',
                 iconImageHref: './assets/img/csgo.png',
                 iconImageSize: [30, 30],
-                iconImageOffset: [-3, -42],
+                iconImageOffset: [0, 0],
             });
             myMap.geoObjects.add(myPlacemark);
         }
